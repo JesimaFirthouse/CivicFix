@@ -15,8 +15,38 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-    return send_from_directory(".","index.html")
+    with open("index.html","r",encoding="utf-8") as file:
+        return file.read()
 
+@app.route("/<page>")
+def frontend_pages(page):
+
+    allowed_pages = {
+        "index.html",
+        "report.html",
+        "track.html",
+        "dashboard.html"
+    }
+
+    if page in allowed_pages:
+        return send_from_directory(".", page)
+
+    return "Page not found", 404
+
+
+@app.route("/css/<path:filename>")
+def css_files(filename):
+    return send_from_directory("css", filename)
+
+
+@app.route("/js/<path:filename>")
+def js_files(filename):
+    return send_from_directory("js", filename)
+
+
+@app.route("/assets/<path:filename>")
+def asset_files(filename):
+    return send_from_directory("assets", filename)
 
 @app.route("/test-report")
 def test_report():
