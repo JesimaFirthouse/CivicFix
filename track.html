@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Track Issue | Civic Fix</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>Civic Fix</h1>
+
+        <nav>
+
+            <a href="index.html">Home</a>
+
+            <a href="report.html">Report an Issue</a>
+
+            <a href="track.html">Track Issue</a>
+
+            <a href="dashboard.html">Dashboard</a>
+
+        </nav>
+
+    </header>
+
+
+    <main>
+
+        <section class="report-section">
+
+            <div class="report-header">
+
+                <h2>Track Your Issue</h2>
+
+                <p>
+                    Enter your Civic Fix ID to check the status
+                    of your reported issue.
+                </p>
+
+            </div>
+
+
+            <div class="form-card">
+
+                <h3>Enter Civic Fix ID</h3>
+
+                <p class="form-description">
+                    Your Civic Fix ID was provided after submitting
+                    your report.
+                </p>
+
+
+                <label class="upload-label">
+                    Civic Fix ID
+                </label>
+
+
+                <input
+                    type="text"
+                    id="civicFixId"
+                    class="location-input"
+                    placeholder="Example: CF-2026-123456"
+                >
+
+
+                <button
+                    class="continue-button"
+                    onclick="trackIssue()"
+                >
+                    Track Issue
+                </button>
+
+
+                <div id="trackResult"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Civic Fix | Building Better Communities
+        </p>
+
+    </footer>
+
+
+    <script src="js/track.js"></script>
+
+</body>
+
+</html>

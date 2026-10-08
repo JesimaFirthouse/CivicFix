@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Civic Fix</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+
+    <h1>Civic Fix</h1>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="report.html">Report an Issue</a>
+        <a href="track.html">Track Issue</a>
+        <a href="dashboard.html">Dashboard</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="report-section">
+
+        <div class="report-header">
+
+            <h2>Civic Fix Dashboard</h2>
+
+            <p>
+                Overview of reported civic issues.
+            </p>
+
+        </div>
+
+
+        <div class="form-card">
+
+            <h3>Dashboard Overview</h3>
+
+            <p class="form-description">
+                Summary of civic issues reported through Civic Fix.
+            </p>
+
+
+            <!-- Dashboard Summary -->
+
+            <div id="dashboardStats" style="
+                display:grid;
+                grid-template-columns:repeat(4, 1fr);
+                gap:15px;
+                margin-top:25px;
+                margin-bottom:25px;
+            ">
+            </div>
+
+
+            <!-- Report Message -->
+
+            <div id="dashboardMessage">
+                Loading reports...
+            </div>
+
+
+            <!-- Reports Table -->
+
+            <div id="reportsTableContainer"></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 Civic Fix | Building Better Communities
+    </p>
+
+</footer>
+
+
+<script>
+
+async function loadReports() {
+
+    const message = document.getElementById("dashboardMessage");
+
+    const stats = document.getElementById("dashboardStats");
+
+    const container = document.getElementById("reportsTableContainer");
+
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/reports"
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                "Unable to load reports."
+            );
+
+        }
+
+
+        const reports = data.reports;
+
+
+        // Calculate report counts
+
+        const totalReports = reports.length;
+
+
+        const submittedReports = reports.filter(
+            report => report.status === "Submitted"
+        ).length;
+
+
+        const inProgressReports = reports.filter(
+            report => report.status === "In Progress"
+        ).length;
+
+
+        const resolvedReports = reports.filter(
+            report => report.status === "Resolved"
+        ).length;
+
+
+        // Display summary cards
+
+        stats.innerHTML = `
+
+            <div style="
+                padding:20px;
+                background:#e8f3f5;
+                border:1px solid #c7e2e7;
+                border-radius:12px;
+                text-align:center;
+            ">
+
+                <h4 style="
+                    margin-bottom:8px;
+                ">
+                    Total Reports
+                </h4>
+
+                <strong style="
+                    font-size:28px;
+                    color:#0f4c5c;
+                ">
+                    ${totalReports}
+                </strong>
+
+            </div>
+
+
+            <div style="
+                padding:20px;
+                background:#f3f4f6;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                text-align:center;
+            ">
+
+                <h4 style="
+                    margin-bottom:8px;
+                ">
+                    Submitted
+                </h4>
+
+                <strong style="
+                    font-size:28px;
+                    color:#0f4c5c;
+                ">
+                    ${submittedReports}
+                </strong>
+
+            </div>
+
+
+            <div style="
+                padding:20px;
+                background:#f3f4f6;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                text-align:center;
+            ">
+
+                <h4 style="
+                    margin-bottom:8px;
+                ">
+                    In Progress
+                </h4>
+
+                <strong style="
+                    font-size:28px;
+                    color:#0f4c5c;
+                ">
+                    ${inProgressReports}
+                </strong>
+
+            </div>
+
+
+            <div style="
+                padding:20px;
+                background:#f3f4f6;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                text-align:center;
+            ">
+
+                <h4 style="
+                    margin-bottom:8px;
+                ">
+                    Resolved
+                </h4>
+
+                <strong style="
+                    font-size:28px;
+                    color:#0f4c5c;
+                ">
+                    ${resolvedReports}
+                </strong>
+
+            </div>
+
+        `;
+
+
+        // No reports
+
+        if (reports.length === 0) {
+
+            message.innerHTML = `
+
+                <div class="track-message">
+
+                    No reports have been submitted yet.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        // Report count message
+
+        message.innerHTML = `
+
+            <div class="track-message">
+
+                ${reports.length} report(s) found.
+
+            </div>
+
+        `;
+
+
+        // Create reports table
+
+        let tableHTML = `
+
+            <div style="
+                overflow-x:auto;
+                margin-top:20px;
+            ">
+
+                <table style="
+                    width:100%;
+                    border-collapse:collapse;
+                    background:white;
+                ">
+
+                    <thead>
+
+                        <tr style="
+                            background:#0f4c5c;
+                            color:white;
+                        ">
+
+                            <th style="padding:12px;">
+                                Civic Fix ID
+                            </th>
+
+                            <th style="padding:12px;">
+                                Category
+                            </th>
+
+                            <th style="padding:12px;">
+                                Problem
+                            </th>
+
+                            <th style="padding:12px;">
+                                Location
+                            </th>
+
+                            <th style="padding:12px;">
+                                Severity
+                            </th>
+
+                            <th style="padding:12px;">
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+        `;
+
+
+        reports.forEach(report => {
+
+            tableHTML += `
+
+                <tr style="
+                    border-bottom:1px solid #e5e7eb;
+                ">
+
+                    <td style="padding:12px;">
+
+                        <strong>
+                            ${report.civicFixId}
+                        </strong>
+
+                    </td>
+
+
+                    <td style="padding:12px;">
+                        ${report.category}
+                    </td>
+
+
+                    <td style="padding:12px;">
+                        ${report.problem}
+                    </td>
+
+
+                    <td style="padding:12px;">
+                        ${report.location || "Not provided"}
+                    </td>
+
+
+                    <td style="padding:12px;">
+                        ${report.severity}
+                    </td>
+
+
+                    <td style="padding:12px;">
+                        ${report.status}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        tableHTML += `
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
+
+        container.innerHTML = tableHTML;
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        message.innerHTML = `
+
+            <div class="track-message error">
+
+                Unable to load reports.
+
+                Please make sure the Civic Fix backend is running.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+loadReports();
+
+</script>
+
+
+</body>
+
+</html>
