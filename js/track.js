@@ -137,8 +137,7 @@ async function trackIssue() {
 
 
 function formatDate(dateString) {
-
-    const date = new Date(dateString);
+    const date = new Date(dateString + "Z");
 
     return date.toLocaleString("en-IN", {
         dateStyle: "medium",
