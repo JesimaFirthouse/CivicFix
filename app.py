@@ -9,11 +9,7 @@ app = Flask(__name__)
 
 def get_db_connection():
     return psycopg2.connect(
-        host="localhost",
-        database="civicfix",
-        user="postgres",
-        password=os.environ.get("DB_PASSWORD"),
-        port="5432"
+        os.environ.get("DATABASE_URL")
     )
 
 
