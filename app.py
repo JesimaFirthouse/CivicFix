@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import psycopg2
 import random
 import os 
@@ -15,7 +15,7 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-    return "Civic Fix Backend + PostgreSQL Connected!"
+    return send_from_directory(".","index.html")
 
 
 @app.route("/test-report")
