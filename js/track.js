@@ -26,7 +26,7 @@ async function trackIssue() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:5000/api/reports/${encodeURIComponent(enteredId)}`
+            `/api/reports/${encodeURIComponent(enteredId)}`
         );
 
         const data = await response.json();
