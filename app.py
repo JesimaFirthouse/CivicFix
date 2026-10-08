@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import psycopg2
 import random
+import os 
 from datetime import datetime
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ def get_db_connection():
         host="localhost",
         database="civicfix",
         user="postgres",
-        password="JesimaFirthouse2007",
+        password=os.environ.get("DB_PASSWORD"),
         port="5432"
     )
 
