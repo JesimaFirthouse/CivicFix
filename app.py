@@ -8,9 +8,36 @@ app = Flask(__name__)
 
 
 def get_db_connection():
-    return psycopg2.connect(
+
+    connection = psycopg2.connect(
         os.environ.get("DATABASE_URL")
     )
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS reports (
+            id SERIAL PRIMARY KEY,
+            civic_fix_id VARCHAR(20) UNIQUE NOT NULL,
+            category VARCHAR(100) NOT NULL,
+            problem VARCHAR(100) NOT NULL,
+            description TEXT,
+            location TEXT,
+            latitude DOUBLE PRECISION,
+            longitude DOUBLE PRECISION,
+            severity VARCHAR(20),
+            name VARCHAR(100),
+            mobile VARCHAR(15),
+            address TEXT,
+            status VARCHAR(30) DEFAULT 'Submitted',
+            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
+    connection.commit()
+    cursor.close()
+
+    return connection
 
 
 @app.route("/")
